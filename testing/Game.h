@@ -27,7 +27,9 @@ private:
 	std::vector<sf::RectangleShape> enemies;
 	sf::RectangleShape enemy;
 	
-	sf::Vector2i Mouse_Position;
+	//Mouse Position
+	sf::Vector2i MousePosWindow;
+	sf::Vector2f MousePosView;
 
 	//Game Logic
 	int points;

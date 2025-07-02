@@ -7,7 +7,7 @@ void Game::initVariable()
 	this->window = nullptr;
 
 	this->points = 0;
-	this->enemytimermax = 1000.f;
+	this->enemytimermax = 50.f;
 	this->enemyspawntimer = this->enemytimermax;
 	this->maxEnemies = 30;
 }
@@ -20,7 +20,6 @@ void Game::initEnemy()
 	this->enemy.setFillColor(sf::Color::Red);
 	this->enemy.setOutlineColor(sf::Color::Yellow);
 	this->enemy.setOutlineThickness(1.f);
-
 }
 
 
@@ -94,9 +93,17 @@ void Game::UpdateEnemy()
 		}
 	}
 	//move enemy
-	for (auto &e : this->enemies)
+	for (int i = 0; i < enemies.size(); i++)
 	{
-		e.move(0.f, 2.f);
+		this->enemies[i].move(0.f, 1.f);
+
+		//Check If Mouse Clicked
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			if (this->enemies[i].getGlobalBounds().contains(this->MousePosView)) {
+				this->enemies.erase(this->enemies.begin() + i);
+
+			}
+		}
 	}
 
 	//remove enemy
@@ -130,7 +137,8 @@ void Game::UpdateMousePosition()
 		which is sf::vector2i
 	*/
 
-	this->Mouse_Position = sf::Mouse::getPosition(*this->window);
+	this->MousePosWindow = sf::Mouse::getPosition(*this->window);
+	this->MousePosView = this->window->mapPixelToCoords(this->MousePosWindow);
 }
 
 void Game::Update()
