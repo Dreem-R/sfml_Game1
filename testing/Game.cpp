@@ -7,9 +7,9 @@ void Game::initVariable()
 	this->window = nullptr;
 
 	this->points = 0;
-	this->enemytimermax = 50.f;
+	this->enemytimermax = 40.f;
 	this->enemyspawntimer = this->enemytimermax;
-	this->maxEnemies = 30;
+	this->maxEnemies = 5;
 }
 
 void Game::initEnemy()
@@ -95,14 +95,20 @@ void Game::UpdateEnemy()
 	//move enemy
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		this->enemies[i].move(0.f, 1.f);
+		this->enemies[i].move(0.f, 4.f);
 
 		//Check If Mouse Clicked
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			//Delete Enemy on Mouse Click if its inside the Enemy Rectangle
 			if (this->enemies[i].getGlobalBounds().contains(this->MousePosView)) {
 				this->enemies.erase(this->enemies.begin() + i);
-
 			}
+		}
+
+
+		//Check If enemy Goes out of screen
+		else if (this->enemies[i].getPosition().y > this->window->getSize().y) {
+			this->enemies.erase(this->enemies.begin() + i);
 		}
 	}
 
