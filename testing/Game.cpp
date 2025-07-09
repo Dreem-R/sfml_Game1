@@ -77,10 +77,11 @@ void Game::UpdateEnemy()
 			-decresing/resetting timer
 			- Updating Enemy:
 				- Moving Enemy Downwards
-
-			//TODO:
 				-Remove Enemy at Edge of screen
 				-Remove Emeny after Mouse Click
+
+			//TODO:
+				-Add Score System
 	*/
 	if (enemies.size() < this->maxEnemies) {
 		if (this->enemyspawntimer >= this->enemytimermax)
@@ -95,24 +96,34 @@ void Game::UpdateEnemy()
 	//move enemy
 	for (int i = 0; i < enemies.size(); i++)
 	{
+		bool Delete = false;
+
 		this->enemies[i].move(0.f, 4.f);
 
 		//Check If Mouse Clicked
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			//Delete Enemy on Mouse Click if its inside the Enemy Rectangle
 			if (this->enemies[i].getGlobalBounds().contains(this->MousePosView)) {
-				this->enemies.erase(this->enemies.begin() + i);
+				Delete = true;
+
+				//Gain Points
+				this->points += 2;
 			}
 		}
 
-
 		//Check If enemy Goes out of screen
 		else if (this->enemies[i].getPosition().y > this->window->getSize().y) {
+			Delete = true;
+			//Lose Points
+			this->points -= 1;
+		}
+
+		//Remove Enemy If Delete = True
+		if (Delete)
+		{
 			this->enemies.erase(this->enemies.begin() + i);
 		}
 	}
-
-	//remove enemy
 
 }
 
