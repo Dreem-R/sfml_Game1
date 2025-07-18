@@ -32,11 +32,11 @@ private:
 	sf::Vector2f MousePosView;
 
 	//Game Logic
-	int points;
+	unsigned points;
 	float enemyspawntimer;
 	float enemytimermax;
 	int maxEnemies;
-
+	bool mouseheld;
 
 	//private funcation
 	void initVariable();

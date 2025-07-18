@@ -5,7 +5,7 @@ using namespace std;
 void Game::initVariable()
 {
 	this->window = nullptr;
-
+	this->mouseheld = false;
 	this->points = 0;
 	this->enemytimermax = 40.f;
 	this->enemyspawntimer = this->enemytimermax;
@@ -96,35 +96,39 @@ void Game::UpdateEnemy()
 	//move enemy
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		bool Delete = false;
-
 		this->enemies[i].move(0.f, 4.f);
 
-		//Check If Mouse Clicked
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			//Delete Enemy on Mouse Click if its inside the Enemy Rectangle
-			if (this->enemies[i].getGlobalBounds().contains(this->MousePosView)) {
-				Delete = true;
-
-				//Gain Points
-				this->points += 2;
-			}
-		}
-
-		//Check If enemy Goes out of screen
-		else if (this->enemies[i].getPosition().y > this->window->getSize().y) {
-			Delete = true;
+		//Check If Box Out Of Screen
+		if (this->enemies[i].getPosition().y > this->window->getSize().y) {
+			this->enemies.erase(this->enemies.begin() + i);
 			//Lose Points
 			this->points -= 1;
 		}
-
-		//Remove Enemy If Delete = True
-		if (Delete)
-		{
-			this->enemies.erase(this->enemies.begin() + i);
-		}
 	}
 
+	//Check If Mouse Clicked
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		if (this->mouseheld == false)
+		{
+			this->mouseheld = true;
+			bool Delete = false;
+			//Delete Enemy on Mouse Click if its inside the Enemy Rectangle
+			for (int i = 0; i < enemies.size() && !Delete; i++)
+			{
+				if (this->enemies[i].getGlobalBounds().contains(this->MousePosView)) {
+					Delete = true;
+					this->enemies.erase(this->enemies.begin() + i);
+					//Gain Points
+					this->points += 2;
+				}
+			}
+		
+		}
+	}
+	else
+	{
+		this->mouseheld = false;
+	}
 }
 
 void Game::PollEvent()
