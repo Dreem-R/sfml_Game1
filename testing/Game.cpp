@@ -166,11 +166,28 @@ void Game::UpdateEnemy()
 			for (int i = 0; i < enemies.size() && !Delete; i++)
 			{
 				if (this->enemies[i].getGlobalBounds().contains(this->MousePosView)) {
+					
+					//Gain Points
+					if (this->enemies[i].getFillColor() == sf::Color::Red) {
+						this->points += 4;
+					}
+					else if (this->enemies[i].getFillColor() == sf::Color::Blue) {
+						this->points += 3;
+					}
+					else if (this->enemies[i].getFillColor() == sf::Color::Cyan) {
+						this->points += 2;
+					}
+					else if (this->enemies[i].getFillColor() == sf::Color::Magenta) {
+						this->points += 5;
+					}
+					else{
+						this->points += 1;
+					}
+
+					std::cout << "Points: " << this->points << std::endl;
+
 					Delete = true;
 					this->enemies.erase(this->enemies.begin() + i);
-					//Gain Points
-					this->points += 1;
-					std::cout << "Points: " << this->points << std::endl;
 				}
 			}
 		
