@@ -3,6 +3,7 @@
 #include<iostream>
 #include<vector>
 #include <ctime>
+#include<sstream>
 
 #include<SFML/Network.hpp>
 #include<SFML/System.hpp>
@@ -27,12 +28,20 @@ private:
 	std::vector<sf::RectangleShape> enemies;
 	sf::RectangleShape enemy;
 	
+	//Resources
+	sf::Font fonts;
+
+	//Text
+	sf::Text UItext;
+
 	//Mouse Position
 	sf::Vector2i MousePosWindow;
 	sf::Vector2f MousePosView;
 
 	//Game Logic
+	bool Gameover;
 	unsigned points;
+	int healthbar;
 	float enemyspawntimer;
 	float enemytimermax;
 	int maxEnemies;
@@ -42,6 +51,8 @@ private:
 	void initVariable();
 	void initEnemy();
 	void initWindow();
+	void initText();
+	void initFonts();
 
 //Contructor /Destructor
 public:
@@ -57,8 +68,10 @@ public:
 	void PollEvent();
 	void UpdateMousePosition();
 	void UpdateEnemy();
+	void UpdateText();
 	void Update();
 
 	void RenderEnemy();
+	void RenderText();
 	void Render();
 };

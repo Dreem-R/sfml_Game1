@@ -6,7 +6,9 @@ void Game::initVariable()
 {
 	this->window = nullptr;
 	this->mouseheld = false;
+	this->Gameover = false;
 	this->points = 0;
+	this->healthbar = 3;
 	this->enemytimermax = 40.f;
 	this->enemyspawntimer = this->enemytimermax;
 	this->maxEnemies = 5;
@@ -32,11 +34,26 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 }
 
+void Game::initText()
+{
+	this->UItext.setFont(this->fonts);
+	this->UItext.setCharacterSize(24);
+	this->UItext.setFillColor(sf::Color::White);
+	this->UItext.setString("Points: 0 \n Health: 3");
+}
+
+void Game::initFonts()
+{
+	this->fonts.loadFromFile("Fonts/BebasNeue-Regular.ttf");
+}
+
 Game::Game()
 {
 	this->initVariable();
 	this->initEnemy();
 	this->initWindow();
+	this->initFonts();
+	this->initText();
 }
 
 Game::~Game()
@@ -102,7 +119,12 @@ void Game::UpdateEnemy()
 		if (this->enemies[i].getPosition().y > this->window->getSize().y) {
 			this->enemies.erase(this->enemies.begin() + i);
 			//Lose Points
-			this->points -= 1;
+			this->healthbar -= 1;
+			std::cout << "HealthBar: " << this->healthbar << std::endl;
+			if (healthbar<=0)
+			{
+				this->Gameover = true;
+			}
 		}
 	}
 
@@ -119,7 +141,8 @@ void Game::UpdateEnemy()
 					Delete = true;
 					this->enemies.erase(this->enemies.begin() + i);
 					//Gain Points
-					this->points += 2;
+					this->points += 1;
+					std::cout << "Points: " << this->points << std::endl;
 				}
 			}
 		
@@ -129,6 +152,13 @@ void Game::UpdateEnemy()
 	{
 		this->mouseheld = false;
 	}
+}
+
+void Game::UpdateText()
+{
+	std::stringstream ss;
+	ss << "Points: " << this->points << "\nHealth: " << this->healthbar;
+	this->UItext.setString(ss.str());
 }
 
 void Game::PollEvent()
@@ -165,9 +195,13 @@ void Game::UpdateMousePosition()
 void Game::Update()
 {
 	this->PollEvent();
-	this->UpdateMousePosition();
-	
-	this->UpdateEnemy();
+	if (!this->Gameover)
+	{
+		this->UpdateMousePosition();
+		this->UpdateEnemy();
+		this->UpdateText();
+
+	}
 }
 
 void Game::RenderEnemy()
@@ -178,12 +212,18 @@ void Game::RenderEnemy()
 
 }
 
+void Game::RenderText()
+{
+	this->window->draw(this->UItext);
+}
+
 void Game::Render()
 {
 	this->window->clear(sf::Color::Black);
 	
 	//Draw Game Objects
 	this->RenderEnemy();
-	
+	this->RenderText();
+
 	this->window->display();
 }
